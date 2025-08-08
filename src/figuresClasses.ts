@@ -1,25 +1,38 @@
+enum ValidationErrors {
+  Length = 'All sides must have length greater than 0',
+  Inequality = 'The longest side of a triangle is >= than a sum of 2 others',
+}
+enum Shape {
+  Triangle = 'triangle',
+  Circle = 'circle',
+  Rectangle = 'rectangle',
+}
+type Color = 'red' | 'blue' | 'green';
 export interface Figure {
-  shape: 'triangle' | 'circle' | 'rectangle';
-  color: 'red' | 'blue' | 'green';
+  shape: Shape;
+  color: Color;
   getArea(): number;
 }
 
 export class Triangle implements Figure {
-  shape: 'triangle' | 'circle' | 'rectangle';
+  shape: Shape;
 
   constructor(
-    public color: 'red' | 'blue' | 'green',
+    public color: Color,
     public a: number,
     public b: number,
     public c: number,
   ) {
     const max = Math.max(a, b, c);
 
-    if (a <= 0 || b <= 0 || c <= 0 || max >= b + c + a - max) {
-      throw new Error('Data is not valid');
+    if (a <= 0 || b <= 0 || c <= 0) {
+      throw new Error(ValidationErrors.Length);
     }
 
-    this.shape = 'triangle';
+    if (max >= b + c + a - max) {
+      throw new Error(ValidationErrors.Inequality);
+    }
+    this.shape = Shape.Triangle;
   }
 
   getArea(): number {
@@ -34,17 +47,17 @@ export class Triangle implements Figure {
 }
 
 export class Circle implements Figure {
-  shape: 'triangle' | 'circle' | 'rectangle';
+  shape: Shape;
 
   constructor(
-    public color: 'red' | 'blue' | 'green',
+    public color: Color,
     public radius: number,
   ) {
     if (radius <= 0) {
-      throw new Error('Data is not valid');
+      throw new Error(ValidationErrors.Length);
     }
 
-    this.shape = 'circle';
+    this.shape = Shape.Circle;
   }
 
   getArea(): number {
@@ -53,17 +66,17 @@ export class Circle implements Figure {
 }
 
 export class Rectangle implements Figure {
-  shape: 'triangle' | 'circle' | 'rectangle';
+  shape: Shape;
 
   constructor(
-    public color: 'red' | 'blue' | 'green',
+    public color: Color,
     public width: number,
     public height: number,
   ) {
     if (width <= 0 || height <= 0) {
-      throw new Error('Data is not valid');
+      throw new Error(ValidationErrors.Length);
     }
-    this.shape = 'rectangle';
+    this.shape = Shape.Rectangle;
   }
 
   getArea(): number {
